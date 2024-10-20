@@ -1,6 +1,6 @@
 # Game Only
 
-file(GLOB_RECURSE MyGame-src "*.h" "*.cpp")
+file(GLOB_RECURSE MyGame-src "*.h" "*.cpp" "*.hpp")
 
 
 add_executable(MyGame ${MyGame-src})

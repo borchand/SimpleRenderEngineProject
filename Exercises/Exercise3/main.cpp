@@ -1,17 +1,12 @@
-// the easy way
-// modified from 00_hello-engine.cpp
 #include "sre/SDLRenderer.hpp"
-void handle_mouse(SDL_Event& e) { /* do stuff */; }
-int main() {
- sre::SDLRenderer r;
- r.init();
- r.mouseEvent = handle_mouse;
- r.frameRender = []{
- sre::RenderPass rp = sre::RenderPass::create().build();
- rp.drawLines({{0,0,0},{0,0,0}});
- rp.finish();
- };
+#include "sre/SpriteAtlas.hpp"
+// include snake engine
+#include "SnakeEngine.hpp"
+#include "FruitComponent.hpp" // Include the FruitComponent header
 
- r.startEventLoop();
- return 0;
+std::shared_ptr<sre::SpriteAtlas> atlas;
+
+int main() {
+
+	SnakeEngine::Init();
 }
