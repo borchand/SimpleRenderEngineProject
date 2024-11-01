@@ -1,6 +1,8 @@
 // SnakeEngine.cpp
 #include "SnakeEngine.hpp"
+#include "BaseComponent.hpp"
 #include "FruitComponent.hpp"
+#include "SnakeComponent.hpp"
 #include "sre/SDLRenderer.hpp"
 #include "sre/SpriteAtlas.hpp"
 
@@ -9,7 +11,9 @@ namespace SnakeEngine {
 	sre::Camera _camera;
 	glm::vec2 window_size = glm::vec2(700, 700);
 	int grid_count = 25;
+	float time = 0;
 	glm::vec2 grid_size = glm::vec2(window_size.x / grid_count, window_size.y / grid_count);
+	glm::vec2 _direction = glm::vec2(1, 0);
 
 
 	void SnakeEngine::Init() {
@@ -21,15 +25,46 @@ namespace SnakeEngine {
 		renderer.init();
 		_camera.setWindowCoordinates();
 
-		FruitComponent::Init(window_size, grid_size, grid_count);
+		BaseComponent::Init(window_size, grid_size);
+		SnakeComponent::Init(glm::vec2(grid_count / 2, grid_count / 2));
+		FruitComponent::Init(grid_count);
 
 		renderer.startEventLoop();
 	}
 
-	void SnakeEngine::ProcessEvents(SDL_Event& event) { }
+	void SnakeEngine::ProcessEvents(SDL_Event& event) { 
+		switch (event.key.keysym.sym) {
+			case SDLK_w: case SDLK_UP:
+				if (_direction != glm::vec2(0, 1))
+				{
+					_direction = glm::vec2(0, -1);
+				}
+				break;
+			case SDLK_s: case SDLK_DOWN:
+				if (_direction != glm::vec2(0, -1)) {
+					_direction = glm::vec2(0, 1);
+				}
+				break;
+			case SDLK_a: case SDLK_LEFT:
+				if (_direction != glm::vec2(-1, 0)) {
+					_direction = glm::vec2(1, 0);
+				}
+				break;
+			case SDLK_d: case SDLK_RIGHT:
+				if (_direction != glm::vec2(1, 0)) {
+					_direction = glm::vec2(-1, 0);
+				}
+				break;
+		}
+	}
 
 	void SnakeEngine::Update(float deltaTime) { 
-		FruitComponent::Update(deltaTime);
+		time += deltaTime;
+		if (time > .5) {
+			time = 0;
+			SnakeComponent::Update(deltaTime, _direction);
+			FruitComponent::Update(deltaTime);
+		}
 	}
 
 	void SnakeEngine::Render()
@@ -42,6 +77,7 @@ namespace SnakeEngine {
 		// send spriteBatchBuilder to your game elements, so that
 		// they can add their sprites for rendering
 		
+		SnakeComponent::Render(spriteBatchBuilder);
 		FruitComponent::Render(spriteBatchBuilder);
 		
 

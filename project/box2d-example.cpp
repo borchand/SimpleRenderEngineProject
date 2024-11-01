@@ -104,7 +104,10 @@ public:
         };
 
         // spawn a few boxes
-        spawnBox(500, 500, 45);
+        spawnBox(500, 200, 45);
+        spawnBox(500, 50, 145);
+        spawnBox(500, 50, 5);
+        spawnBox(500, 400, 4);
 
         r.startEventLoop();
     }
